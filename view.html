@@ -1,79 +1,48 @@
+<!-- view.html -->
 <!DOCTYPE html>
-<html lang="ar">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عرض حلقات البرنامج</title>
-    <link rel="stylesheet" href="style.css">
+    <title>عرض المسلسل</title>
 </head>
 <body>
-    <div class="container">
-        <h1>عرض حلقات البرنامج</h1>
-        <div class="episodes">
-            <ul id="episodes-list"></ul>
-        </div>
-        <div class="player">
-            <iframe id="player-iframe" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-    <script >
+    <h1 id="seriesName"></h1>
+    <video id="videoPlayer" controls></video>
+    <ul id="episodeList"></ul>
 
-const jsonUrl = "https://kimos998.github.io/Serie1111/data.json"; // مسار ملف JSON
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const seriesName = urlParams.get('series');
 
-const episodesList = document.getElementById("episodes-list");
-const playerIframe = document.getElementById("player-iframe");
+        document.getElementById('seriesName').innerText = seriesName;
 
-// استدعاء بيانات ملف JSON
-fetch(jsonUrl)
-  .then((response) => response.json())
-  .then((data) => {
-    // ...
-
-    // وظيفة لتصفية الحلقات حسب البرنامج
-    function filterEpisodes(program) {
-      const episodes = document.querySelectorAll(".episode");
-      
-      episodes.forEach((episode) => {
-        if (episode.dataset.program === program) {
-          episode.style.display = "block";
-        } else {
-          episode.style.display = "none";
+        // Function to fetch series data from Google Sheets
+        async function fetchSeriesData() {
+            const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/15zoCNcy-A5TYZWFSaXn129JWUm9HzjMWr70Pda3GaTI/values/Sheet1!A1:I100?key=YOUR_API_KEY');
+            const data = await response.json();
+            return data.values;
         }
-      });
-    }
 
-    // استخراج معلمة URL "program"
-    const program = getParameterByName("program");
+        // Function to display episodes
+        async function displayEpisodes() {
+            const seriesData = await fetchSeriesData();
+            const episodes = seriesData.filter(row => row[1] === seriesName);
 
-    // عرض قائمة الحلقات
-    data.forEach((episode) => {
-      const episodeElement = document.createElement("li");
-      episodeElement.classList.add("episode");
-      episodeElement.innerHTML = episode.title;
-      episodeElement.dataset.program = episode.program;
+            const episodeList = document.getElementById('episodeList');
+            episodeList.innerHTML = '';
 
-      // معالجة ضغط عنوان الحلقة
-      episodeElement.addEventListener("click", () => {
-        playerIframe.src = episode.videoUrl;
-      });
+            episodes.forEach(episode => {
+                const listItem = document.createElement('li');
+                const button = document.createElement('button');
+                button.innerText = episode[2];
+                button.onclick = function() {
+                    document.getElementById('videoPlayer').src = episode[3];
+                };
+                listItem.appendChild(button);
+                episodeList.appendChild(listItem);
+            });
+        }
 
-      episodesList.appendChild(episodeElement);
-    });
-
-    // تصفية الحلقات حسب البرنامج
-    filterEpisodes(program);
-  });
-
-// وظيفة لاستخراج معلمة URL
-function getParameterByName(name) {
-  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-    results = regex.exec(location.search);
-  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
-
-      
+        displayEpisodes();
     </script>
 </body>
 </html>
