@@ -6,7 +6,6 @@
 </head>
 <body>
     <h1 id="seriesName"></h1>
-    <video id="videoPlayer" controls></video>
     <ul id="episodeList"></ul>
 
     <script>
@@ -32,12 +31,10 @@
 
             episodes.forEach(episode => {
                 const listItem = document.createElement('li');
-                const button = document.createElement('button');
-                button.innerText = episode[2];
-                button.onclick = function() {
-                    document.getElementById('videoPlayer').src = episode[3];
-                };
-                listItem.appendChild(button);
+                const link = document.createElement('a');
+                link.innerText = episode[2];
+                link.href = episode[3];
+                listItem.appendChild(link);
                 episodeList.appendChild(listItem);
             });
         }
