@@ -1,13 +1,20 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>برامج فرحة الرسم</title>
+    <title>Series Selection</title>
 </head>
 <body>
-    <h1>برامج فرحة الرسم</h1>
-    <a href="view.html?program=program1">عرض حلقات البرنامج الأول</a>
-    <a href="view.html?program=program2">عرض حلقات البرنامج الثاني</a>
+    <h1>Select a Series:</h1>
+    <button onclick="redirectToSeries('aliwood')">Aliwood</button>
+    <button onclick="redirectToSeries('holakee')">Holakee</button>
+
+    <script>
+        function redirectToSeries(seriesName) {
+            window.location.href = `view.html?series=${seriesName}`;
+        }
+    </script>
 </body>
 </html>
+
