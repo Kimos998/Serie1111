@@ -1,0 +1,23 @@
+[
+  {
+    "title": "الحلقة الأولى - البرنامج الأول",
+    "videoUrl": "https://www.youtube.com/watch?v=...",
+    "program": "program1"
+  },
+  {
+    "title": "الحلقة الثانية - البرنامج الأول",
+    "videoUrl": "https://www.youtube.com/watch?v=...",
+    "program": "program1"
+  },
+  {
+    "title": "الحلقة الأولى - البرنامج الثاني",
+    "videoUrl": "https://www.youtube.com/watch?v=...",
+    "program": "program2"
+  },
+  {
+    "title": "الحلقة الثانية - البرنامج الثاني",
+    "videoUrl": "https://www.youtube.com/watch?v=...",
+    "program": "program2"
+  },
+  ...
+]
