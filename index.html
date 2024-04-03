@@ -2,18 +2,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>قائمة الأفلام</title>
+    <title>قائمة المسلسلات</title>
 </head>
 <body>
-    <button onclick="redirectToSeries('aliwood')">Aliwood</button>
-    <button onclick="redirectToSeries('holakee')">Holakee</button>
-    
+    <div id="seriesButtons"></div>
+
     <script>
-        function redirectToSeries(seriesName) {
-            window.location.href = `view.html?series=${seriesName}`;
+        // Function to fetch series data from Google Sheets
+        async function fetchSeriesData() {
+            const response = await fetch('https://sheets.googleapis.com/v4/spreadsheets/15zoCNcy-A5TYZWFSaXn129JWUm9HzjMWr70Pda3GaTI/values/Sheet1!A1:I100?key=YOUR_API_KEY');
+            const data = await response.json();
+            return data.values;
         }
+
+        // Function to display series buttons
+        async function displaySeriesButtons() {
+            const seriesData = await fetchSeriesData();
+            const seriesButtonsDiv = document.getElementById('seriesButtons');
+
+            const seriesNames = [...new Set(seriesData.map(row => row[1]))]; // Get unique series names
+
+            seriesNames.forEach(seriesName => {
+                const button = document.createElement('button');
+                button.innerText = seriesName;
+                button.onclick = function() {
+                    window.location.href = `view.html?series=${encodeURIComponent(seriesName)}`;
+                };
+                seriesButtonsDiv.appendChild(button);
+            });
+        }
+
+        displaySeriesButtons();
     </script>
 </body>
 </html>
-
-
