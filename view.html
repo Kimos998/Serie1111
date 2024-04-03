@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض حلقات البرنامج</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>عرض حلقات البرنامج</h1>
+        <div class="episodes">
+            <ul id="episodes-list"></ul>
+        </div>
+        <div class="player">
+            <iframe id="player-iframe" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+    <script >
+
+const jsonUrl = "https://kimos998.github.io/Serie1111/data.Json"; // مسار ملف JSON
+
+const episodesList = document.getElementById("episodes-list");
+const playerIframe = document.getElementById("player-iframe");
+
+// استدعاء بيانات ملف JSON
+fetch(jsonUrl)
+  .then((response) => response.json())
+  .then((data) => {
+    // ...
+
+    // وظيفة لتصفية الحلقات حسب البرنامج
+    function filterEpisodes(program) {
+      const episodes = document.querySelectorAll(".episode");
+      
+      episodes.forEach((episode) => {
+        if (episode.dataset.program === program) {
+          episode.style.display = "block";
+        } else {
+          episode.style.display = "none";
+        }
+      });
+    }
+
+    // استخراج معلمة URL "program"
+    const program = getParameterByName("program");
+
+    // عرض قائمة الحلقات
+    data.forEach((episode) => {
+      const episodeElement = document.createElement("li");
+      episodeElement.classList.add("episode");
+      episodeElement.innerHTML = episode.title;
+      episodeElement.dataset.program = episode.program;
+
+      // معالجة ضغط عنوان الحلقة
+      episodeElement.addEventListener("click", () => {
+        playerIframe.src = episode.videoUrl;
+      });
+
+      episodesList.appendChild(episodeElement);
+    });
+
+    // تصفية الحلقات حسب البرنامج
+    filterEpisodes(program);
+  });
+
+// وظيفة لاستخراج معلمة URL
+function getParameterByName(name) {
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(location.search);
+  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+
+      
+    </script>
+</body>
+</html>
